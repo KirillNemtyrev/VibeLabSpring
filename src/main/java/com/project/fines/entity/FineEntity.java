@@ -6,16 +6,27 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 
-@AllArgsConstructor
 @Data
 public class FineEntity {
+    private int id;
     private String numberCar;
-    private String fullNameIntruder;
-    private String fullNameCop;
-    private Date drawingProtocol;
-    private int totalFine;
+    private String intruder;
+    private String cop;
+    private Date dateProtocol;
+    private int total;
     private boolean paid;
     private boolean agenda;
     private Date dateOfPayment;
     private Date dateDeadline;
+
+    public FineEntity(int id, String numberCar, String intruder, String cop, Date dateProtocol, int total, Date dateDeadline) {
+        this.id = id;
+        this.numberCar = numberCar;
+        this.intruder = intruder;
+        this.cop = cop;
+        this.dateProtocol = dateProtocol;
+        this.total = total;
+        this.dateDeadline = dateDeadline;
+    }
+
 }
