@@ -1,11 +1,11 @@
-package com.project.fines.body;
+package com.project.fines.dto;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class FineBody {
+public class FineDto {
     private String numberCar;
     private String intruder;
     private String cop;

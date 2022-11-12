@@ -19,8 +19,7 @@ public class FineEntity {
     private Date dateOfPayment;
     private Date dateDeadline;
 
-    public FineEntity(int id, String numberCar, String intruder, String cop, Date dateProtocol, int total, Date dateDeadline) {
-        this.id = id;
+    public FineEntity(String numberCar, String intruder, String cop, Date dateProtocol, int total, Date dateDeadline) {
         this.numberCar = numberCar;
         this.intruder = intruder;
         this.cop = cop;
