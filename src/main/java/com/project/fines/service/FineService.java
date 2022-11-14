@@ -1,111 +1,118 @@
 package com.project.fines.service;
 
 import com.project.fines.dto.FineDto;
-import com.project.fines.entity.FineEntity;
-import com.project.fines.storage.FinesStorage;
-import lombok.RequiredArgsConstructor;
+import com.project.fines.model.FineModel;
+import com.project.fines.repository.FineRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-
 @Service
-@RequiredArgsConstructor
 public class FineService {
 
-    private FinesStorage finesStorage;
+    @Autowired
+    private FineRepository fineRepository;
 
     public void create(FineDto fineDto){
-        FineEntity fineEntity = new FineEntity(
+        fineRepository.save(new FineModel(
                 fineDto.getNumberCar(),
                 fineDto.getIntruder(),
                 fineDto.getCop(),
                 fineDto.getDateProtocol(),
                 fineDto.getTotal(),
-                fineDto.getDateDeadline());
-
-        finesStorage.add(fineEntity);
+                fineDto.getDateDeadline()));
     }
 
-    public boolean update(int fineId, FineDto fineDto){
-        FineEntity fineEntity = finesStorage.get(fineId);
+    public boolean update(Long fineId, FineDto fineDto){
+        FineModel fineModel = fineRepository.findById(fineId)
+                .orElse(null);
 
-        if(fineEntity == null){
+        if(fineModel == null){
             return false;
         }
 
         if(fineDto.getNumberCar() != null){
-            fineEntity.setNumberCar(fineDto.getNumberCar());
+            fineModel.setNumberCar(fineDto.getNumberCar());
         }
 
         if(fineDto.getIntruder() != null){
-            fineEntity.setIntruder(fineDto.getIntruder());
+            fineModel.setIntruder(fineDto.getIntruder());
         }
 
         if(fineDto.getCop() != null){
-            fineEntity.setCop(fineDto.getCop());
+            fineModel.setCop(fineDto.getCop());
         }
 
         if(fineDto.getTotal() > 0){
-            fineEntity.setTotal(fineDto.getTotal());
+            fineModel.setTotal(fineDto.getTotal());
         }
 
         if(fineDto.getDateDeadline() != null){
-            fineEntity.setDateDeadline(fineDto.getDateDeadline());
+            fineModel.setDateDeadline(fineDto.getDateDeadline());
         }
 
         if(fineDto.getDateProtocol() != null){
-            fineEntity.setDateProtocol(fineDto.getDateProtocol());
+            fineModel.setDateProtocol(fineDto.getDateProtocol());
         }
-
-        finesStorage.update(fineId, fineEntity);
+        fineRepository.save(fineModel);
         return true;
     }
 
-    public boolean delete(int fineId){
-        FineEntity fineEntity = finesStorage.get(fineId);
-        if(fineEntity == null){
+    public boolean delete(Long fineId){
+        FineModel fineModel = fineRepository.findById(fineId)
+                .orElse(null);
+
+        if(fineModel == null){
             return false;
         }
 
-        finesStorage.remove(fineId);
+        fineRepository.delete(fineModel);
         return true;
     }
 
-    public FineEntity get(int fineId){
-        return finesStorage.get(fineId);
+    public FineModel get(Long fineId){
+        return fineRepository.findById(fineId).orElse(null);
     }
 
-    public boolean pay(int fineId){
-        FineEntity fineEntity = finesStorage.get(fineId);
-        if(fineEntity == null){
+    public boolean pay(Long fineId){
+        FineModel fineModel = fineRepository.findById(fineId)
+                .orElse(null);
+
+        if(fineModel == null){
             return false;
         }
 
-        if(fineEntity.isPaid()){
+        if(fineModel.isPaid()){
             return false;
         }
 
-        fineEntity.setPaid(true);
-        finesStorage.update(fineId, fineEntity);
+        fineModel.setPaid(true);
+        fineRepository.save(fineModel);
         return true;
     }
 
-    public boolean court(int fineId){
-        FineEntity fineEntity = finesStorage.get(fineId);
-        if(fineEntity == null){
+    public boolean court(Long fineId){
+        FineModel fineModel = fineRepository.findById(fineId)
+                .orElse(null);
+
+        if(fineModel == null){
             return false;
         }
 
-        if(fineEntity.isAgenda()){
+        if(fineModel.isCourt()){
             return false;
         }
 
-        fineEntity.setAgenda(true);
-        finesStorage.update(fineId, fineEntity);
+        fineModel.setCourt(true);
+        fineRepository.save(fineModel);
         return true;
     }
 
-    public Collection<FineEntity> getList(){
-        return finesStorage.getMap();
+    public Page<FineModel> get(int page){
+        Pageable pageable = PageRequest.of(page, 5, Sort.by("id"));
+        return fineRepository.findAll(pageable);
     }
 }
