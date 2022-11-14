@@ -4,6 +4,7 @@ import com.project.fines.dto.FineDto;
 import com.project.fines.entity.FineEntity;
 import com.project.fines.service.FineService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/v1/fines")
 public class FineController {
 
+    @Autowired
     private FineService fineService;
 
     @GetMapping
