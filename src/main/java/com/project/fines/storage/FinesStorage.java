@@ -3,40 +3,35 @@ package com.project.fines.storage;
 import com.project.fines.entity.FineEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class FinesStorage {
 
-    private List<FineEntity> list = new ArrayList<>();
+    private final Map<Integer, FineEntity> map = new HashMap<>();
+    private int count = 0;
 
     public void add(FineEntity fineEntity){
-        list.add(fineEntity);
+        fineEntity.setId(count++);
+        map.put(count, fineEntity);
     }
 
-    public void remove(FineEntity fineEntity){
-        list.remove(fineEntity);
+    public void remove(int id){
+        map.remove(id);
     }
 
-    public void remove(int index){
-        list.remove(index);
+    public void update(int id, FineEntity fineEntity) {
+        map.put(id, fineEntity);
     }
 
-    public void update(int index, FineEntity fineEntity){
-        list.set(index, fineEntity);
+    public FineEntity get(int id){
+        return map.get(id);
     }
 
-    public FineEntity get(int index){
-        return list.get(index);
+    public Collection<FineEntity> getMap() {
+        return map.values();
     }
-
-    public List<FineEntity> getList() {
-        return list;
-    }
-
-    public int size(){
-        return list.size();
-    }
-
 }
